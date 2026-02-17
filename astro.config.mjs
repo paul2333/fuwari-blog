@@ -170,3 +170,4 @@ export default defineConfig({
 		},
 	},
 });
+base: '/protected',
