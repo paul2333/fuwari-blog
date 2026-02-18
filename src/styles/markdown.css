@@ -1,127 +1,127 @@
-@layer components {
-  /* 标题锚点样式 */
-  .custom-md h1,
-  .custom-md h2,
-  .custom-md h3,
-  .custom-md h4,
-  .custom-md h5,
-  .custom-md h6 {
-    .anchor {
-      @apply transition -m-0.5 ml-[0.2ch] p-0.5 select-none opacity-0 no-underline;
+/* src/styles/markdown.css - 完整修复版 */
 
-      .anchor-icon {
-        @apply mx-[0.45ch];
+/* 先引入 Tailwind 必需的层指令（必须在文件开头） */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 现在安全使用 @layer components */
+@layer components {
+  .custom-md {
+    h1 {
+      @apply text-3xl font-bold;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      .anchor {
+        @apply transition -m-0.5 ml-[0.2ch] p-0.5 select-none opacity-0 no-underline;
+
+        .anchor-icon {
+          @apply mx-[0.45ch];
+        }
+      }
+
+      &:hover {
+        .anchor {
+          @apply opacity-100;
+        }
       }
     }
 
-    &:hover .anchor {
+    a:not(.no-styling) {
+      @apply relative bg-none font-medium text-[var(--primary)] underline decoration-[var(--link-underline)] decoration-1 decoration-dashed underline-offset-4 transition-colors;
+
+      box-decoration-break: clone;
+      -webkit-box-decoration-break: clone;
+      display: inline-block;
+
+      &:hover, &:active {
+        @apply decoration-transparent bg-[var(--btn-plain-bg-hover)];
+        border-bottom: 1px dashed var(--link-hover);
+        text-decoration: none;
+      }
+    }
+
+    code {
+      @apply bg-[var(--inline-code-bg)] text-[var(--inline-code-color)] px-1 py-0.5 rounded-md overflow-hidden font-mono text-sm;
+
+      &:before, &:after {
+        content: none;
+      }
+
+      counter-reset: line;
+      span.line {
+        &:before {
+          @apply text-white/25 mr-4 w-4 inline-block text-right;
+          content: counter(line);
+          counter-increment: line;
+        }
+
+        &:last-child:empty,
+        &:last-child:has(> span:empty:only-child) {
+          display: none;
+        }
+      }
+    }
+
+    .copy-btn {
+      @apply btn-regular-dark opacity-0 shadow-lg shadow-black/50 absolute active:scale-90 h-8 w-8 top-3 right-3 text-sm rounded-lg transition-all ease-in-out z-20 cursor-pointer;
+    }
+
+    .frame:hover .copy-btn {
       @apply opacity-100;
     }
-  }
 
-  /* 链接样式（替换了原来的 .link） */
-  .custom-md a:not(.no-styling) {
-    @apply relative bg-none font-medium text-[var(--primary)] underline decoration-[var(--link-underline)] decoration-1 decoration-dashed underline-offset-4 transition-colors;
-
-    box-decoration-break: clone;
-    -webkit-box-decoration-break: clone;
-    display: inline-block;
-
-    &:hover,
-    &:active {
-      @apply decoration-transparent bg-[var(--btn-plain-bg-hover)] border-b border-dashed border-[var(--link-hover)];
-      text-decoration: none;
-    }
-  }
-
-  /* 行内代码 */
-  .custom-md code {
-    @apply bg-[var(--inline-code-bg)] text-[var(--inline-code-color)] px-1 py-0.5 rounded-md overflow-hidden font-mono text-sm;
-
-    &:before,
-    &:after {
-      content: none;
-    }
-  }
-
-  /* 代码块行号 */
-  .custom-md code span.line {
-    &:before {
-      @apply text-white/25 mr-4 w-4 inline-block text-right;
-      content: counter(line);
-      counter-increment: line;
+    .copy-btn-icon {
+      @apply absolute top-1/2 left-1/2 transition -translate-x-1/2 -translate-y-1/2 w-4 h-4 fill-white pointer-events-none;
     }
 
-    &:last-child:empty,
-    &:last-child:has(> span:empty:only-child) {
-      display: none;
-    }
-  }
-
-  /* 代码复制按钮 */
-  .custom-md .copy-btn {
-    @apply btn-regular-dark opacity-0 shadow-lg shadow-black/50 absolute active:scale-90 h-8 w-8 top-3 right-3 text-sm rounded-lg transition-all ease-in-out z-20 cursor-pointer;
-  }
-
-  .custom-md .frame:hover .copy-btn {
-    @apply opacity-100;
-  }
-
-  .custom-md .copy-btn-icon {
-    @apply absolute top-1/2 left-1/2 transition -translate-x-1/2 -translate-y-1/2 w-4 h-4 fill-white pointer-events-none;
-  }
-
-  .custom-md .copy-btn .copy-icon {
-    @apply opacity-100 fill-white dark:fill-white/75;
-  }
-
-  .custom-md .copy-btn.success .copy-icon {
-    @apply opacity-0 fill-[var(--deep-text)];
-  }
-
-  .custom-md .copy-btn .success-icon {
-    @apply opacity-0 fill-white;
-  }
-
-  .custom-md .copy-btn.success .success-icon {
-    @apply opacity-100;
-  }
-
-  /* Expressive Code 代码块 */
-  .custom-md .expressive-code {
-    @apply my-4;
-
-    ::selection {
-      @apply bg-[var(--codeblock-selection)];
-    }
-  }
-
-  /* 列表标记 */
-  .custom-md ul,
-  .custom-md ol {
-    li::marker {
-      @apply text-[var(--primary)];
-    }
-  }
-
-  /* 引用块 */
-  .custom-md blockquote {
-    @apply not-italic border-transparent relative font-normal;
-
-    &:before {
-      @apply content-[''] absolute -left-1 block transition bg-[var(--btn-regular-bg)] h-full w-1 rounded-full;
+    .copy-btn .copy-icon {
+      @apply opacity-100 fill-white dark:fill-white/75;
     }
 
-    p:before,
-    p:after {
-      @apply content-none;
+    .copy-btn.success .copy-icon {
+      @apply opacity-0 fill-[var(--deep-text)];
     }
-  }
 
-  /* KaTeX 数学公式容器 */
-  .custom-md .katex-display-container {
-    max-width: 100%;
-    overflow-x: auto;
-    margin: 1em 0;
+    .copy-btn .success-icon {
+      @apply opacity-0 fill-white;
+    }
+
+    .copy-btn.success .success-icon {
+      @apply opacity-100;
+    }
+
+    .expressive-code {
+      @apply my-4;
+
+      ::selection {
+        @apply bg-[var(--codeblock-selection)];
+      }
+    }
+
+    ul, ol {
+      li::marker {
+        @apply text-[var(--primary)];
+      }
+    }
+
+    blockquote {
+      @apply not-italic border-transparent relative font-normal;
+
+      &:before {
+        @apply content-[''] absolute -left-1 block transition bg-[var(--btn-regular-bg)] h-full w-1 rounded-full;
+      }
+
+      p:before, p:after {
+        @apply content-none;
+      }
+    }
+
+    .katex-display-container {
+      max-width: 100%;
+      overflow-x: auto;
+      margin: 1em 0;
+    }
   }
 }
