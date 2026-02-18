@@ -1,0 +1,40 @@
+name: Sync Fork with Upstream
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # 每天 UTC 0:00 自动运行
+  workflow_dispatch:     # 允许手动触发
+
+permissions:
+  contents: write  # 关键！授予 Actions 写仓库权限
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout your repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure git user
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+
+      - name: Fetch upstream
+        run: |
+          git remote add upstream https://github.com/saicaca/fuwari.git || true
+          git fetch upstream
+
+      - name: Merge upstream into main
+        run: |
+          git checkout main || git checkout -b main
+          git merge upstream/main --allow-unrelated-histories --no-edit || true
+          git push origin main || echo "Push skipped (no changes or conflict)"
+
+      - name: Commit merge result if needed
+        run: |
+          git add .
+          git commit -m "chore: auto sync from upstream saicaca/fuwari [skip ci]" || echo "No changes to commit"
+          git push origin main || echo "Final push skipped"
