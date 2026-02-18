@@ -20,20 +20,27 @@
     }
 
     a:not(.no-styling) {
-        @apply relative bg-none link font-medium text-[var(--primary)]
-        underline decoration-[var(--link-underline)] decoration-1 decoration-dashed underline-offset-4;
-        box-decoration-break: clone;
-        -webkit-box-decoration-break: clone;
-        display: inline-block;
-    
-        &:hover, &:active {
-            @apply decoration-transparent;
-            background: var(--btn-plain-bg-hover);
-            border-bottom: 1px dashed var(--link-hover);
-            text-decoration: none;
-        }
-    }
+        /* ===== Markdown 样式修复版 ===== */
+@layer components {
+  .prose a,
+  .link {
+    @apply text-blue-600 hover:text-blue-500 hover:underline underline-offset-4 transition-colors;
+  }
 
+  .prose strong {
+    @apply font-semibold;
+  }
+
+  .prose code {
+    @apply bg-zinc-100 px-1.5 py-0.5 rounded text-sm font-mono;
+  }
+
+  .prose pre {
+    @apply bg-zinc-950 text-zinc-50 p-4 rounded-xl overflow-auto;
+  }
+}
+
+/* 如果你还有其他自定义样式，可以继续加在 @layer components 里面 */
     code {
         @apply bg-[var(--inline-code-bg)] text-[var(--inline-code-color)] px-1 py-0.5 rounded-md overflow-hidden;
 
