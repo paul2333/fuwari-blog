@@ -5,8 +5,12 @@
 @tailwind components;
 @tailwind utilities;
 
-/* 现在安全使用 @layer components */
+/* 定义自定义类在 @layer components 里（修复 @apply 报错） */
 @layer components {
+  .btn-regular-dark {
+    @apply bg-zinc-800 text-zinc-200 hover:bg-zinc-700 focus:ring-2 focus:ring-zinc-500 transition-colors rounded-md px-4 py-2;
+  }
+
   .custom-md {
     h1 {
       @apply text-3xl font-bold;
@@ -36,8 +40,7 @@
       display: inline-block;
 
       &:hover, &:active {
-        @apply decoration-transparent bg-[var(--btn-plain-bg-hover)];
-        border-bottom: 1px dashed var(--link-hover);
+        @apply decoration-transparent bg-[var(--btn-plain-bg-hover)] border-b border-dashed border-[var(--link-hover)];
         text-decoration: none;
       }
     }
